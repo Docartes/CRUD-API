@@ -10,9 +10,11 @@ class Task {
 	}
 
 	static addTask(dto) {
-		return db.exec(`
+		const stmt = db.prepare(`
 			INSERT INTO tasks (title, description) VALUES(${dto.title}, ${dto.description})
 		`);
+
+		return stmt.run(dto.title, dto.description)
 	}
 }
 
