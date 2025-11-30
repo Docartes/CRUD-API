@@ -23,16 +23,35 @@ class Task {
 
 	async updateTask(id, dto) {
 		try {
+			const fields = []
+			const values = []
+
+			if ( dto.title !== undefined ) {
+				fields.push(`title = ?`)
+				values.push(dto.title)
+			}
+
+			if ( dto.description !== undefined ) {
+				fields.push(`description = ?`)
+				values.push(dto.description)
+			}
+
+			if ( dto.status !== undefined ) {
+				fields.push(`status = ?`)
+				values.push(dto.status)
+			}
+
+			fields.push(`updated_at = CURRENT_TIMESTAMP`)
+
+
 			const stmt = await db.prepare(`
 				UPDATE tasks SET 
-					title = ?, 
-					description = ?, 
-					status = ?, 
-					updated_at = CURRENT_TIMESTAMP 
+					${fields.join(', ')}
 				WHERE task_id = ?
 			`);
+			values.push(id)
 
-			return stmt.run(dto.title, dto.description, dto.status, id)
+			return stmt.run(...values)
 		} catch(err) {
 			throw Error(err)
 		}
