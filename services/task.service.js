@@ -1,4 +1,4 @@
-import { database as db } from '../models/task.model'
+import { database as db } from '../models/task.model.js'
 
 class Task {
 	constructor (title, description, status = 'PENDING') {
@@ -9,13 +9,62 @@ class Task {
 		this.updated_at = new Date()
 	}
 
-	static addTask(dto) {
-		const stmt = db.prepare(`
-			INSERT INTO tasks (title, description) VALUES(${dto.title}, ${dto.description})
-		`);
+	async addTask(dto) {
+		try {
+			const stmt = await db.prepare(`
+				INSERT INTO tasks (title, description) VALUES(?, ?)
+			`);
 
-		return stmt.run(dto.title, dto.description)
+			return stmt.run(dto.title, dto.description)
+		} catch(err) {
+			throw Error(err)
+		}
+	}
+
+	async updateTask(id, dto) {
+		try {
+			const stmt = await db.prepare(`
+				UPDATE tasks SET 
+					title = ?, 
+					description = ?, 
+					status = ?, 
+					updated_at = CURRENT_TIMESTAMP 
+				WHERE task_id = ?
+			`);
+
+			return stmt.run(dto.title, dto.description, dto.status, id)
+		} catch(err) {
+			throw Error(err)
+		}
+	}
+
+	async findById(id) {
+		try {
+			const stmt = await db.prepare(`SELECT * FROM tasks WHERE task_id = ${id}`) 
+
+			return stmt.all()
+		} catch( err ) {
+			throw Error(err)
+		}
+	}
+
+	async deleteTaskById(id) {
+		try {
+			return db.prepare(`DELETE FROM tasks WHERE task_id = ?`).run(id)
+		} catch (err) {
+			throw Error(err)
+		}
+	}
+
+	async findAll() {
+		try {
+			return db.prepare(`SELECT * FROM tasks`).all()
+		} catch (err) {
+			throw Error(err)
+		}
 	}
 }
 
-export default Task;
+export {
+	Task
+};

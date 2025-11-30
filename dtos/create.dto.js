@@ -1,6 +1,6 @@
 class createDTO {
-	constructor ( title, description ) {
-		if ( typeof title !== 'string' || title.length < 3 ) {
+	constructor ( {title, description} ) {
+		if ( !title || title.length < 3 ) {
 			throw Error(`The length of title must be over 3 character`)
 		}
 
@@ -9,4 +9,6 @@ class createDTO {
 	}
 }
 
-export default createDTO;
+export {
+	createDTO
+};

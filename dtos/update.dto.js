@@ -1,5 +1,5 @@
 class updateDTO {
-	constructor (title, description, status) {
+	constructor ({title, description, status}) {
 		if ( title < 3 && title ) {
 			throw Error(`Title is to shorts`)
 		}
@@ -8,10 +8,13 @@ class updateDTO {
 			throw Error(`Invalid Status`)
 		}
 
+
 		this.title = title;
 		this.description = description;
-		this.status = status
+		this.status = status;
 	}
 }
 
-export default updateDTO;
+export {
+	updateDTO
+};

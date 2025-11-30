@@ -1,13 +1,13 @@
-import { database as db } from './models/task.model'
+import { database as db } from './models/task.model.js'
 
 const initDatabase = `
 CREATE TABLE IF NOT EXISTS tasks (
   task_id INTEGER PRIMARY KEY AUTOINCREMENT,
   title TEXT NOT NULL,
   description TEXT NOT NULL,
-  status TEXT CHECK( status IN ('DONE', 'IN-PROGRESS', 'PENDING')),
-  created_at TEXT CURRENT_TIMESTAMP, 
-  updated_at TEXT CURRENT_TIMESTAMP
+  status TEXT CHECK( status IN ('DONE', 'IN-PROGRESS', 'PENDING')) DEFAULT 'PENDING',
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP, 
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 `;
 
